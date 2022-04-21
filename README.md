@@ -58,3 +58,34 @@
         rootMargin: "-300px 0px",//親要素からどれくらいめり込んでから動かすか(この場合300px上あるいは下にめり込んでから動く)
         threshold: 0//0は対象要素の1番下、1は一番上[0, 0.5, 1]と書けば上、真ん中、下で呼ばれる
     };
+
+
+### スマホとPCの判別方法
+まず"click"はスマホでも動くが、タッチしてから300msあとになり、レスポンスが悪くなる
+→"touchstart"を使いたい！
+
+    window.ontouchstart
+    //trueがスマホ、それ以外がPC
+
+つまり...
+
+    class MobileMenu{
+        constructor(){
+            this.DOM = {};
+            this.DOM.btn = document.querySelector(".mobile-menu__btn");
+            this.DOM.container = document.querySelector("#global-container");
+            this.eventType =  this._getEventType();
+            this._addEvent();
+        }
+        _getEventType(){
+            return window.ontouchstart ? "touchstart" : "click";
+        }
+
+        _toggle(){
+            this.DOM.container.classList.toggle("menu-open");
+        }
+
+        _addEvent(){
+            this.DOM.btn.addEventListener(this.eventType, this._toggle.bind(this));//bindをつけないとオブジェクトの方が参照されるため
+        }
+    }
